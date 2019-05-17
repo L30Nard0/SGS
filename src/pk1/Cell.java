@@ -45,11 +45,22 @@ public class Cell  extends Thread{
 			for (int i = 0; i < Board.age; i++) {
 				if (isInterrupted()) throw new InterruptedException();
                 sleep(50);
-                temp = Board.board.list;   
-             	for (ListIterator<Cell> it = Board.board.list.listIterator(); it.hasNext();) {
-             		  Cell value = it.next();
-             		  this.addCells(value);
-             	}
+                temp = Board.board.list;
+                
+                
+                int M = temp.indexOf(this) + 30;
+                if (M > temp.size()) M = temp.size();
+                int m  = temp.indexOf(this) - 30;
+                if (m < 0) m = 0;
+                
+                for (int j = temp.indexOf(this); j<M; j++ ) {
+                	this.addCells(temp.get(j));
+                }
+                
+                for (int j = temp.indexOf(this); j>m; j--) {
+                	this.addCells(temp.get(j));
+                }
+                
         
              	synchronized(Board.board.list) {
              		sleep(100);
