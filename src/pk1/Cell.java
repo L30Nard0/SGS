@@ -9,7 +9,7 @@ public class Cell  extends Thread{
 	
 	public String name;
 	public int generation; // personal
-	//public Tupla<Integer, Integer> position;
+	public Tupla<Integer, Integer> position;
 	public int wellness = 1;
 	public static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
 	public Tupla<Integer, int[]> P; // personality
@@ -31,7 +31,8 @@ public class Cell  extends Thread{
 		
 		this.generation = gen;
 		
-		//position = new Tupla<Integer, Integer>(new Random().nextInt(3),new Random().nextInt(3));
+		position = new Position().getPosition();
+		
 	}
 	//
 	

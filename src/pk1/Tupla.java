@@ -16,4 +16,8 @@ public class Tupla <T, E> {
 	public E getValue2() {
 		return y;
 	}
+	
+	public void printT() {
+		System.out.println(" x: " + x + " y: " + y);
+	}
 }

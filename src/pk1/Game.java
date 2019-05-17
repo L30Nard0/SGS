@@ -34,7 +34,9 @@ public class Game {
 		
 				
 		for (Cell cell : Board.board.list) {
-			System.out.println(cell.name + " \"I'm alive\"");
+			System.out.print(cell.name + " \"I'm alive\"");
+			cell.position.printT();
+			System.out.println();
 			//if (!cell.isAlive())					
 				cell.start();
 		}
@@ -59,7 +61,8 @@ public class Game {
 		System.out.println();
 		System.out.println("who is alive? ");
 		for (Cell cell : Board.board.list)
-			System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1()); 
+			//System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1());
+			{System.out.print(cell.name); cell.position.printT();}
 		
 		System.out.println("\nNumber of births: " + Board.births );
 		System.out.println("The Board SIZE is: " + Board.board.SIZE());
