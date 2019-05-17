@@ -30,8 +30,7 @@ public class Game {
 			Board.board.insert(x);
 		}
 
-		System.out.println("The Board SIZE is: " + Board.board.SIZE());
-		System.out.println();
+		System.out.println("The Board SIZE is: " + Board.board.SIZE() + "\n");
 		
 				
 		for (Cell cell : Board.board.list) {
@@ -51,32 +50,30 @@ public class Game {
 		Thread.sleep(2000);
 		System.out.print(" .\n\n");
 
-
 		Thread.sleep(10000);
 		
 		stop = true;
 		
-		Thread.sleep(StartNum*1000);
+		Thread.sleep(StartNum*1500);
 	
 		System.out.println();
 		System.out.println("who is alive? ");
 		for (Cell cell : Board.board.list)
-			System.out.println(cell.name + " generation: " + cell.generation +"°" + " personality type: " + cell.P.getValue1()); 
+			System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1()); 
 		
-		System.out.println("Number of births: " + Board.births );
+		System.out.println("\nNumber of births: " + Board.births );
 		System.out.println("The Board SIZE is: " + Board.board.SIZE());
-		System.out.println("The Grave SIZE is: " + Board.graveyard);
-		System.out.println("Heyyyy! Heyyyy! Heyyyy! Heyyyy!");
-		System.out.println();
+		System.out.println("The Graveyard SIZE is: " + Board.graveyard);
+		System.out.println("\nHeyyyy! Heyyyy! Heyyyy! Heyyyy!\n");
 		
 		
 		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".txt");
 		try {
 		File file = new File(path);
 		if (file.exists())
-		System.out.println("Il file " + path + " esiste");
+		System.out.println("The file " + filename + " in " + path + " already exist");
 		else if (file.createNewFile()) {
-			System.out.println("Il file " + path + " è stato creato");
+			System.out.println("The file " + filename + " in " + path + " has been created");
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (Cell cell : Board.board.list) {
@@ -87,11 +84,10 @@ public class Game {
 			bw.close();
 		}
 		else
-		System.out.println("Il file " + path + " non può essere creato");
+		System.out.println("The file " + filename + " in " + path + " can not be created");
 		
 		} catch (IOException e) {
 		e.printStackTrace();
 		}
-		
 	}
 }

@@ -7,5 +7,4 @@ public class Board {
 	public static int births = 0;
 	public static CellSet<Cell> board = new CellSet<Cell>();
 	
-
 }

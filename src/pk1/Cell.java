@@ -8,7 +8,7 @@ import java.util.*;
 public class Cell  extends Thread{
 	
 	public String name;
-	public int generation;
+	public int generation; // personal
 	//public Tupla<Integer, Integer> position;
 	public int wellness = 1;
 	public static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
@@ -32,7 +32,6 @@ public class Cell  extends Thread{
 		this.generation = gen;
 		
 		//position = new Tupla<Integer, Integer>(new Random().nextInt(3),new Random().nextInt(3));
-		
 	}
 	//
 	
@@ -43,6 +42,7 @@ public class Cell  extends Thread{
 		try {
 			
 			for (int i = 0; i < Board.age; i++) {
+				if (isInterrupted()) throw new InterruptedException();
                 sleep(50);
                 temp = Board.board.list;   
              	for (ListIterator<Cell> it = Board.board.list.listIterator(); it.hasNext();) {
@@ -56,6 +56,7 @@ public class Cell  extends Thread{
            		  	if (isReady()) this.reproduction();
               	}
            	}
+			
 			sleep(20);
             int index = Board.board.list.indexOf(this);
             Board.board.list.remove(index);
