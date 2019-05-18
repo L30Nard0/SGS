@@ -1,15 +1,10 @@
 package pk1;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Game {
 	public static boolean stop = false;
-	private static String filename = "prova";
 
 	public static void main(String[] args) throws InterruptedException{
 		// TODO Auto-generated method stub
@@ -17,7 +12,7 @@ public class Game {
 		System.out.println("The data of S.G.S. will be saved on a file");
 		Scanner in = new Scanner(System. in);
 		System.out.print("Please insert file name: ");
-		filename = in.nextLine();
+		Data.filename = in.nextLine();
 		
 		Scanner input = new Scanner(System.in);
 		System.out.print("Insert the start number of cells: ");
@@ -56,62 +51,19 @@ public class Game {
 		
 		stop = true;
 		
-		Thread.sleep(StartNum*1000);
+		Thread.sleep((int)(StartNum*0.85) *10000);
 	
 		System.out.println();
 		System.out.println("who is alive? ");
 		for (Cell cell : Board.board.list)
-			//System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1());
-			{System.out.print(cell.name); cell.position.printT();}
+			System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1());
 		
 		System.out.println("\nNumber of births: " + Board.births );
 		System.out.println("The Board SIZE is: " + Board.board.SIZE());
 		System.out.println("The Graveyard SIZE is: " + Board.graveyard);
 		System.out.println("\nHeyyyy! Heyyyy! Heyyyy! Heyyyy!\n");
 		
-		
-		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".txt");
-		String pathXY = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat("_xy.txt");
+		Data.SaveData();	
 
-
-		try {
-		File file = new File(path);
-		File fileXY = new File(pathXY);
-		
-		if (file.exists())
-		System.out.println("The file " + filename + " in " + path + " already exist");
-		else if (file.createNewFile()) {
-			System.out.println("The file " + filename + " in " + path + " has been created");
-			FileWriter fw = new FileWriter(file);
-			BufferedWriter bw = new BufferedWriter(fw);
-			for (Cell cell : Board.board.list) {
-				bw.write("\n");
-				bw.write(cell.P.getValue1().toString());
-			}
-			bw.flush();
-			bw.close();
-		}
-		else {System.out.println("The file " + filename + " in " + path + " can not be created");}
-		
-		FileWriter fwXY = new FileWriter(fileXY);
-		BufferedWriter bwXY = new BufferedWriter(fwXY);
-		for (Integer x : Board.Xaxis) {
-			bwXY.write(" ");
-			bwXY.write(x.toString());
-		}
-		bwXY.write(";");
-		bwXY.write("\r\n");
-		bwXY.flush();
-
-		for (Integer y : Board.Yaxis) {
-			bwXY.write(" ");
-			bwXY.write(y.toString());
-		}
-		bwXY.flush();
-		bwXY.close();
-		
-		} catch (IOException e) {
-		e.printStackTrace();
-		}
 	}
 }

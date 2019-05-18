@@ -3,7 +3,9 @@ import java.util.ArrayList;
 
 public class Board {
 	
-	public static final int age = 10; 							// maximum age of a cell 
+	// This class is a model of game board were the SGS's players can born die and make connection whit each others
+	
+	public static final int age = 10; 							
 	public static int graveyard = 0;
 	public static int births = 0;
 	public static CellSet<Cell> board = new CellSet<Cell>();
