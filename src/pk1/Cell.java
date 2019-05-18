@@ -1,23 +1,24 @@
 package pk1;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 
 public class Cell  extends Thread{
 	
 	public String name;
-	public int generation; // personal
-	public Tupla<Integer, Integer> position;
-	public int wellness = 1;
-	public static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
+	public int generation; 		// dynamic field increase from parent to child
+	
+	private int wellness = 1;
 	public Tupla<Integer, int[]> P; // personality
-	public HashMap<String, Integer> connections = new HashMap<String, Integer>();	
+	private static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
+	
+	public Tupla<Integer, Integer> position; 	// coordinates (x,y) that represent the position of a cell in space
+	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
+	// map of connections between this Cell and the others
+	 
 	
 	
-	
-	// Constructor of a Cell with a name and only one bond with himself
+	// Constructor of a generic Cell 
 	
 	public Cell(int gen) {
 		 
@@ -49,9 +50,10 @@ public class Cell  extends Thread{
 	public void run() {
 		try {
 			
+			// the "for" loop goes on until reach the maximum age value then the cell/thread will be interrupt
 			for (int i = 0; i < Board.age; i++) {
 				if (isInterrupted()) throw new InterruptedException();
-                sleep(20);
+                sleep(30);
                 temp = Board.board.list;
                 
                 
@@ -88,8 +90,7 @@ public class Cell  extends Thread{
         }
     }
 	
-	//			//
-	
+	//			
 	
 	// Cell State
 	
@@ -128,6 +129,8 @@ public class Cell  extends Thread{
 	}
 	
 	public void editW() {
+		// personal method
+		
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }

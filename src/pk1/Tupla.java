@@ -1,8 +1,8 @@
 package pk1;
 
 public class Tupla <T, E> {
-	public final T x;
-	public final E y;
+	private final T x;
+	private final E y;
 	
 	public Tupla ( T x, E y){
 		this.x = x;
