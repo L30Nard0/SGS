@@ -13,7 +13,7 @@ public class Cell  extends Thread{
 	public int wellness = 1;
 	public static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
 	public Tupla<Integer, int[]> P; // personality
-	public HashMap<String, Connection> connections = new HashMap<String, Connection>();	
+	public HashMap<String, Integer> connections = new HashMap<String, Integer>();	
 	
 	
 	
@@ -33,10 +33,17 @@ public class Cell  extends Thread{
 		
 		position = new Position().getPosition();
 		
+		synchronized(Board.Xaxis) {
+			Board.Xaxis.add(position.getValue1());
+		}
+		synchronized(Board.Yaxis) {
+			Board.Yaxis.add(position.getValue2());
+		}
 	}
 	//
 	
 	//		RUN		//
+	
 	ArrayList<Cell> temp;
 	
 	public void run() {
@@ -44,7 +51,7 @@ public class Cell  extends Thread{
 			
 			for (int i = 0; i < Board.age; i++) {
 				if (isInterrupted()) throw new InterruptedException();
-                sleep(50);
+                sleep(20);
                 temp = Board.board.list;
                 
                 
@@ -61,7 +68,6 @@ public class Cell  extends Thread{
                 	this.addCells(temp.get(j));
                 }
                 
-        
              	synchronized(Board.board.list) {
              		sleep(100);
            		  	this.editW();
@@ -91,9 +97,6 @@ public class Cell  extends Thread{
 		return connections.keySet().contains(name);
 	}
 	
-	public double getDistance(String name) {
-		return connections.get(name).distance;
-	}
 	
 	public int isCompatible(Cell cell) {
 		int CompLevel = 0;
@@ -113,12 +116,6 @@ public class Cell  extends Thread{
 		if (wellness >= MaxWLevel) return true;
 		return false;
 	}
-	
-	public int TypeOfConn(Cell cell) {
-		if (hasConnection(cell.getName()))
-			return connections.get(cell.getName()).TypeOfBond;
-		return 0;
-	}
 	//	
 	
 	
@@ -127,12 +124,12 @@ public class Cell  extends Thread{
 	public void addCells(Cell cell) {
 		if (!connections.keySet().contains(cell.getName()))
 			if (this.isCompatible(cell) != 0)
-				connections.put(cell.getName(), new Connection(this, cell, this.isCompatible(cell)));
+				connections.put(cell.getName(), this.isCompatible(cell));
 	}
 	
 	public void editW() {
-	    for (Connection connect : connections.values()) {
-	    	wellness += connect.TypeOfBond; 
+	    for (Integer TypeOfBond : connections.values()) {
+	    	wellness += TypeOfBond; 
 	    }
 	    if (connections.entrySet().size() > 10) wellness++;
 	    else wellness--;
@@ -142,8 +139,8 @@ public class Cell  extends Thread{
 	public  void reproduction() {
 		if (this.isReady()) { 
 			Cell son = new Cell(generation++);
-			connections.put(son.getName(), new Connection(this, son, 5));
-			son.connections.put(this.getName(), new Connection(son, this, 5));
+			connections.put(son.getName(), 5);
+			son.connections.put(this.getName(), 5);
 			Board.board.list.add(son);
 			Board.births++;
 			MaxWLevel++;

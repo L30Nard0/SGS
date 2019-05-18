@@ -36,7 +36,7 @@ public class Game {
 		for (Cell cell : Board.board.list) {
 			System.out.print(cell.name + " \"I'm alive\"");
 			cell.position.printT();
-			System.out.println();
+			System.out.println(  );
 			//if (!cell.isAlive())					
 				cell.start();
 		}
@@ -52,11 +52,11 @@ public class Game {
 		Thread.sleep(2000);
 		System.out.print(" .\n\n");
 
-		Thread.sleep(10000);
+		Thread.sleep(20000);
 		
 		stop = true;
 		
-		Thread.sleep(StartNum*1500);
+		Thread.sleep(StartNum*1000);
 	
 		System.out.println();
 		System.out.println("who is alive? ");
@@ -71,8 +71,13 @@ public class Game {
 		
 		
 		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".txt");
+		String pathXY = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat("_xy.txt");
+
+
 		try {
 		File file = new File(path);
+		File fileXY = new File(pathXY);
+		
 		if (file.exists())
 		System.out.println("The file " + filename + " in " + path + " already exist");
 		else if (file.createNewFile()) {
@@ -86,8 +91,24 @@ public class Game {
 			bw.flush();
 			bw.close();
 		}
-		else
-		System.out.println("The file " + filename + " in " + path + " can not be created");
+		else {System.out.println("The file " + filename + " in " + path + " can not be created");}
+		
+		FileWriter fwXY = new FileWriter(fileXY);
+		BufferedWriter bwXY = new BufferedWriter(fwXY);
+		for (Integer x : Board.Xaxis) {
+			bwXY.write(" ");
+			bwXY.write(x.toString());
+		}
+		bwXY.write(";");
+		bwXY.write("\r\n");
+		bwXY.flush();
+
+		for (Integer y : Board.Yaxis) {
+			bwXY.write(" ");
+			bwXY.write(y.toString());
+		}
+		bwXY.flush();
+		bwXY.close();
 		
 		} catch (IOException e) {
 		e.printStackTrace();
