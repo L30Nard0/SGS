@@ -10,15 +10,14 @@ public class Game {
 		// TODO Auto-generated method stub
 		
 		System.out.println("The data of S.G.S. will be saved on a file");
-		Scanner in = new Scanner(System. in);
+		Scanner input = new Scanner(System. in);
 		System.out.print("Please insert file name: ");
-		Data.filename = in.nextLine();
+		Data.filename = input.nextLine();
 		
-		Scanner input = new Scanner(System.in);
+		Scanner input2 = new Scanner(System.in);
 		System.out.print("Insert the start number of cells: ");
-		int StartNum = input.nextInt();
-		in.close();
-		input.close();
+		int StartNum = input2.nextInt();
+
 		
 		for (int i=0; i<StartNum; i++ ) {
 			Cell x = new Cell(1);
@@ -31,9 +30,8 @@ public class Game {
 		for (Cell cell : Board.board.list) {
 			System.out.print(cell.name + " \"I'm alive\"");
 			cell.position.printT();
-			System.out.println(  );
-			//if (!cell.isAlive())					
-				cell.start();
+			System.out.println(  );				
+			cell.start();
 		}
 		
 		Thread.currentThread();
@@ -47,11 +45,23 @@ public class Game {
 		Thread.sleep(2000);
 		System.out.print(" .\n\n");
 
-		Thread.sleep(20000);
+		Thread.sleep(50000);
 		
 		stop = true;
 		
-		Thread.sleep((int)(StartNum*0.85) *10000);
+		String exit = "false";
+		Scanner input3 = new Scanner(System. in);
+		while (true) {
+
+			exit =  input3.nextLine();
+			if (exit != "false") break;
+		}
+		
+		input.close();
+		input2.close();
+		input3.close();
+		
+		//Thread.sleep((int)(StartNum*0.85) *10000);
 	
 		System.out.println();
 		System.out.println("who is alive? ");
