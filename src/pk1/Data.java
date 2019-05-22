@@ -35,7 +35,7 @@ public class Data {
 		
 		FileWriter fwXY = new FileWriter(fileXY);
 		BufferedWriter bwXY = new BufferedWriter(fwXY);
-		for (Integer x : Board.Xaxis) {
+		for (Float x : Board.Xaxis) {
 			bwXY.write(" ");
 			bwXY.write(x.toString());
 		}
@@ -43,7 +43,7 @@ public class Data {
 		bwXY.write("\r\n");
 		bwXY.flush();
 
-		for (Integer y : Board.Yaxis) {
+		for (Float y : Board.Yaxis) {
 			bwXY.write(" ");
 			bwXY.write(y.toString());
 		}

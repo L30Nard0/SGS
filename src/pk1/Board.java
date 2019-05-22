@@ -10,6 +10,6 @@ public class Board {
 	public static int births = 0;
 	public static CellSet<Cell> board = new CellSet<Cell>();
 	
-	public static ArrayList<Integer> Xaxis = new ArrayList<Integer> (); 
-	public static ArrayList<Integer> Yaxis = new ArrayList<Integer> (); 
+	public static ArrayList<Float> Xaxis = new ArrayList<Float> (); 
+	public static ArrayList<Float> Yaxis = new ArrayList<Float> (); 
 }

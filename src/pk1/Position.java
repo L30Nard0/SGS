@@ -5,35 +5,30 @@ import java.util.Random;
 
 public class Position {
 	
-	private static int minX = 10;
-	private static int maxX = -9;
-	private static int minY = 10;
-	private static int maxY = -9;
-	
-	private Tupla<Integer, Integer> position;  // cell of tow numbers
+	private Tupla<Float, Float> position;  // cell of tow numbers
 	
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public Position() {
-		this.increase();
 		
 		int signX = -1;
 		if (new Random().nextInt(2) == 1) signX = 1;
 		int signY = -1;
 		if (new Random().nextInt(2) == 1) signY = 1;
 		
+		float xValue = new Random().nextFloat() + new Random().nextInt(20);
+		while (Board.Xaxis.contains(xValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
+		float yValue = new Random().nextFloat() + new Random().nextInt(20);
+		while (Board.Xaxis.contains(yValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
 		
-		int x = (new Random().nextInt(minX) + maxX) * signX;
-		int y = (new Random().nextInt(minY) + maxY) * signY;
+		float x = xValue*signX;
+
+		float y = yValue*signY;
 		
-		position = new Tupla<Integer, Integer>(x, y);
+		position = new Tupla<Float, Float>(x, y);
 	}
 	
-	public synchronized void increase() {
-		maxX += 3; 
-		maxY += 3; 
-	}
-	
-	public Tupla<Integer, Integer> getPosition(){
+	public Tupla<Float, Float> getPosition(){
 		return position;
 	}
 

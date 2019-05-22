@@ -12,7 +12,7 @@ public class Cell  extends Thread{
 	public Tupla<Integer, int[]> P; // personality
 	private static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
 	
-	public Tupla<Integer, Integer> position; 	// coordinates (x,y) that represent the position of a cell in space
+	public Tupla<Float, Float> position; 	// coordinates (x,y) that represent the position of a cell in space
 	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
 	// map of connections between this Cell and the others
 	 

@@ -14,54 +14,42 @@ public class Game {
 		System.out.print("Please insert file name: ");
 		Data.filename = input.nextLine();
 		
-		Scanner input2 = new Scanner(System.in);
 		System.out.print("Insert the start number of cells: ");
-		int StartNum = input2.nextInt();
-
+		int StartNum = input.nextInt();
 		
 		for (int i=0; i<StartNum; i++ ) {
 			Cell x = new Cell(1);
 			Board.board.insert(x);
+			System.out.print(x.name + " \"I'm alive\"");
+			x.position.printT();
+			System.out.println();				
+			x.start();
 		}
 
 		System.out.println("The Board SIZE is: " + Board.board.SIZE() + "\n");
 		
-				
-		for (Cell cell : Board.board.list) {
-			System.out.print(cell.name + " \"I'm alive\"");
-			cell.position.printT();
-			System.out.println(  );				
-			cell.start();
-		}
-		
 		Thread.currentThread();
 		
-		Thread.sleep(2000);
-		System.out.print("\n.");
-		Thread.sleep(2000);
-		System.out.print(" .");
-		Thread.sleep(2000);
-		System.out.print(" .");
-		Thread.sleep(2000);
-		System.out.print(" .\n\n");
+		System.out.println();
+		for (int i = 0; i <4; i++) {
+			Thread.sleep(2000);
+			System.out.print(". ");
+		}
+		System.out.println("\n");
 
 		Thread.sleep(50000);
 		
 		stop = true;
 		
 		String exit = "false";
-		Scanner input3 = new Scanner(System. in);
+		Scanner input2 = new Scanner(System.in);
 		while (true) {
-
-			exit =  input3.nextLine();
+			exit =  input2.nextLine();
 			if (exit != "false") break;
 		}
-		
+
 		input.close();
 		input2.close();
-		input3.close();
-		
-		//Thread.sleep((int)(StartNum*0.85) *10000);
 	
 		System.out.println();
 		System.out.println("who is alive? ");
