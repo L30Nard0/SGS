@@ -32,7 +32,7 @@ public class Cell  extends Thread{
 		
 		this.generation = gen;
 		
-		position = new Position().getPosition();
+		position = Position();
 		
 		synchronized(Board.Xaxis) {
 			Board.Xaxis.add(position.getValue1());
@@ -41,6 +41,25 @@ public class Cell  extends Thread{
 			Board.Yaxis.add(position.getValue2());
 		}
 	}
+	
+	public static Tupla<Float, Float> Position() {
+		
+		int signX = -1;
+		if (new Random().nextInt(2) == 1) signX = 1;
+		int signY = -1;
+		if (new Random().nextInt(2) == 1) signY = 1;
+		
+		float xValue = new Random().nextFloat() + new Random().nextInt(20);
+		while (Board.Xaxis.contains(xValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
+		float yValue = new Random().nextFloat() + new Random().nextInt(20);
+		while (Board.Xaxis.contains(yValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
+		
+		float x = xValue*signX;
+
+		float y = yValue*signY;
+		
+		return new Tupla<Float, Float>(x, y);
+}
 	//
 	
 	//		RUN		//
