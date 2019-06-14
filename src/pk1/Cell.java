@@ -3,7 +3,7 @@ package pk1;
 import java.util.*;
 
 
-public class Cell  extends Thread{
+public class Cell  extends Thread {
 	
 	public String name;
 	public int generation; 		// dynamic field increase from parent to child
@@ -94,6 +94,8 @@ public class Cell  extends Thread{
            		  	this.editW();
            		  	if (isReady()) this.reproduction();
               	}
+             	
+             	if(Game.stop) this.interrupt();
            	}
 			
 			sleep(20);
