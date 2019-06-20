@@ -18,7 +18,7 @@ public class Game {
 		int StartNum = input.nextInt();
 		
 		for (int i=0; i<StartNum; i++ ) {
-			Cell x = new Cell(1);
+			Cell x = new Cell("0000-0");
 			Board.board.insert(x);
 			System.out.print(x.name + " \"I'm alive\"");
 			x.position.printT();
@@ -41,18 +41,21 @@ public class Game {
 		Scanner input2 = new Scanner(System.in);
 		while (true) {
 			exit =  input2.nextLine();
-			if (exit != "false") stop = true; break;
+			if (exit != "false" || Board.board.SIZE() == 0) stop = true; break;
 		}
 
 		input.close();
 		input2.close();
 		
 		Thread.sleep(Board.board.SIZE()*100);
-	
 		System.out.println();
 		System.out.println("who is alive? ");
-		for (Cell cell : Board.board.list)
-			System.out.println(cell.name + " " + cell.generation +"°  generation" + " personality type: " + cell.P.getValue1());
+		for (Cell cell : Board.board.list) {
+			System.out.println(cell.name + " personality type: " + cell.P.getValue1());
+			Board.Xaxis.add(cell.position.getValue1());
+			Board.Xaxis.add(cell.position.getValue2());		
+		}
+		
 		
 		System.out.println("\nNumber of births: " + Board.births );
 		System.out.println("The Board SIZE is: " + Board.board.SIZE());

@@ -37,7 +37,7 @@ public class Data {
 		BufferedWriter bwXY = new BufferedWriter(fwXY);
 		for (Float x : Board.Xaxis) {
 			bwXY.write(" ");
-			bwXY.write(x.toString());
+			bwXY.write(x.toString().concat(","));
 		}
 		bwXY.write(";");
 		bwXY.write("\r\n");
@@ -45,7 +45,7 @@ public class Data {
 
 		for (Float y : Board.Yaxis) {
 			bwXY.write(" ");
-			bwXY.write(y.toString());
+			bwXY.write(y.toString().concat(","));
 		}
 		bwXY.flush();
 		bwXY.close();
