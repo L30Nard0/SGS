@@ -10,10 +10,10 @@ public class Cell  extends Thread {
 	protected boolean status;
 	
 	private int wellness = 1;
-	public Tupla<Integer, int[]> P; // personality
+	public Tupla<Integer, int[]> Personality; // personality
 	private static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
 	
-	public Tupla<Float, Float> position; 	// coordinates (x,y) that represent the position of a cell in space
+	public Tupla<Float, Float> Position; 	// coordinates (x,y) that represent the position of a cell in space
 	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
 	// map of connections between this Cell and the others
 	 
@@ -31,11 +31,9 @@ public class Cell  extends Thread {
 		for (int i = 0; i < personality.length; i++) 
 			personality[i] = new Random().nextInt(2);
 		
-		P = new Tupla<Integer, int[]>(new Random().nextInt(4) + 1, personality );
+		Personality = new Tupla<Integer, int[]>(new Random().nextInt(4) + 1, personality );
 		
-		//this.generation = gen;
-		
-		position = Position();
+		Position = Coordinates.getPosition();
 	}
 	
 	public static Tupla<Float, Float> Position() {
@@ -129,12 +127,12 @@ public class Cell  extends Thread {
 	public int isCompatible(Cell cell) {
 		int CompLevel = 0;
 		
-		int percent = (int)((double)(this.P.getValue1()*100/cell.P.getValue1()));
+		int percent = (int)((double)(this.Personality.getValue1()*100/cell.Personality.getValue1()));
 		if (percent > 100) percent = percent/10;
 		
 		if (new Random().nextInt(101) <= percent) {
-			for (int i = 0; i<this.P.getValue2().length; i++) {
-				if (this.P.getValue2()[i] == cell.P.getValue2()[i]) CompLevel++;
+			for (int i = 0; i<this.Personality.getValue2().length; i++) {
+				if (this.Personality.getValue2()[i] == cell.Personality.getValue2()[i]) CompLevel++;
 			} 
 		}
 		return CompLevel;
@@ -161,6 +159,7 @@ public class Cell  extends Thread {
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }
+	    
 	    if (connections.entrySet().size() > 10) wellness++;
 	    else wellness--;
 	    if (connections.entrySet().size() > 20) wellness -= 20;

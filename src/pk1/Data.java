@@ -26,7 +26,7 @@ public class Data {
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (Cell cell : Board.board.list) {
 				bw.write("\n");
-				bw.write(cell.P.getValue1().toString());
+				bw.write(cell.Personality.getValue1().toString());
 			}
 			bw.flush();
 			bw.close();

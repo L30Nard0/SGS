@@ -21,7 +21,7 @@ public class Game {
 			Cell x = new Cell("0000-0");
 			Board.board.insert(x);
 			System.out.print(x.name + " \"I'm alive\"");
-			x.position.printT();
+			System.out.println(x.Position.getValue1());
 			System.out.println();				
 			x.start();
 		}
@@ -42,18 +42,20 @@ public class Game {
 		while (true) {
 			exit =  input2.nextLine();
 			if (exit != "false" || Board.board.SIZE() == 0) stop = true; break;
+
 		}
 
 		input.close();
 		input2.close();
 		
 		Thread.sleep(Board.board.SIZE()*100);
+		
 		System.out.println();
 		System.out.println("who is alive? ");
 		for (Cell cell : Board.board.list) {
-			System.out.println(cell.name + " personality type: " + cell.P.getValue1());
-			Board.Xaxis.add(cell.position.getValue1());
-			Board.Xaxis.add(cell.position.getValue2());		
+			System.out.println(cell.name + " personality type: " + cell.Personality.getValue1());
+			Board.Xaxis.add(cell.Position.getValue1());
+			Board.Xaxis.add(cell.Position.getValue2());		
 		}
 		
 		
