@@ -5,8 +5,9 @@ import java.util.*;
 
 public class Cell  extends Thread {
 	
-	public String name;
-	public int generation; 		// dynamic field increase from parent to child
+	protected String name;
+	//protected String Family; 		// dynamic field increase from parent to child
+	protected boolean status;
 	
 	private int wellness = 1;
 	public Tupla<Integer, int[]> P; // personality
@@ -20,9 +21,11 @@ public class Cell  extends Thread {
 	
 	// Constructor of a generic Cell 
 	
-	public Cell(int gen) {
+	public Cell(String FamilyName) {
 		 
-		name = "Cell".concat(getName().substring(6));
+		name = "Cell".concat(getName().substring(6)).concat(FamilyName.substring(4));
+		
+		status = true;
 		
 		int[] personality = new int[5];
 		for (int i = 0; i < personality.length; i++) 
@@ -30,16 +33,9 @@ public class Cell  extends Thread {
 		
 		P = new Tupla<Integer, int[]>(new Random().nextInt(4) + 1, personality );
 		
-		this.generation = gen;
+		//this.generation = gen;
 		
 		position = Position();
-		
-		synchronized(Board.Xaxis) {
-			Board.Xaxis.add(position.getValue1());
-		}
-		synchronized(Board.Yaxis) {
-			Board.Yaxis.add(position.getValue2());
-		}
 	}
 	
 	public static Tupla<Float, Float> Position() {
@@ -64,18 +60,26 @@ public class Cell  extends Thread {
 	
 	//		RUN		//
 	
-	ArrayList<Cell> temp;
 	
 	public void run() {
 		try {
 			
+			ArrayList<Cell> temp;
 			// the "for" loop goes on until reach the maximum age value then the cell/thread will be interrupt
 			for (int i = 0; i < Board.age; i++) {
 				if (Game.stop) Thread.currentThread().interrupt();
 				if (isInterrupted()) throw new InterruptedException();
                 sleep(30);
                 temp = Board.board.list;
-                
+               
+       
+                Iterator<String> it = connections.keySet().iterator();
+                while (it.hasNext()) {
+                	String key = it.next();
+                	if (connections.get(key) == null) {
+                		it.remove();
+                	}
+                }
                 
                 int M = temp.indexOf(this) + 30;
                 if (M > temp.size()) M = temp.size();
@@ -104,6 +108,7 @@ public class Cell  extends Thread {
             Board.board.list.remove(index);
             this.interrupt();
             System.out.print("\n" + this.name + ": \"I'm dead ");
+            name = null;
             if (isInterrupted()) throw new InterruptedException();
             
         } catch (InterruptedException e) {
@@ -145,7 +150,7 @@ public class Cell  extends Thread {
 	// Cell Action 
 	
 	public void addCells(Cell cell) {
-		if (!connections.keySet().contains(cell.getName()))
+		if (!connections.keySet().contains(cell.getName()))   
 			if (this.isCompatible(cell) != 0)
 				connections.put(cell.getName(), this.isCompatible(cell));
 	}
@@ -163,7 +168,7 @@ public class Cell  extends Thread {
 	
 	public  void reproduction() {
 		if (this.isReady()) { 
-			Cell son = new Cell(generation++);
+			Cell son = new Cell(name);
 			connections.put(son.getName(), 5);
 			son.connections.put(this.getName(), 5);
 			Board.board.insert(son);
