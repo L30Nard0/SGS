@@ -3,7 +3,7 @@ package pk1;
 import java.util.*;
 
 
-public class Cell  extends Thread{
+public class Cell  extends Thread {
 	
 	public String name;
 	public int generation; 		// dynamic field increase from parent to child
@@ -71,6 +71,7 @@ public class Cell  extends Thread{
 			
 			// the "for" loop goes on until reach the maximum age value then the cell/thread will be interrupt
 			for (int i = 0; i < Board.age; i++) {
+				if (Game.stop) Thread.currentThread().interrupt();
 				if (isInterrupted()) throw new InterruptedException();
                 sleep(30);
                 temp = Board.board.list;
@@ -94,6 +95,8 @@ public class Cell  extends Thread{
            		  	this.editW();
            		  	if (isReady()) this.reproduction();
               	}
+             	
+             	if(Game.stop) this.interrupt();
            	}
 			
 			sleep(20);
@@ -163,7 +166,7 @@ public class Cell  extends Thread{
 			Cell son = new Cell(generation++);
 			connections.put(son.getName(), 5);
 			son.connections.put(this.getName(), 5);
-			Board.board.list.add(son);
+			Board.board.insert(son);
 			Board.births++;
 			MaxWLevel++;
 			System.out.println("A new life is born!!! Its name is: " + son.name);

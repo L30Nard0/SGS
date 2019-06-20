@@ -36,20 +36,18 @@ public class Game {
 			System.out.print(". ");
 		}
 		System.out.println("\n");
-
-		Thread.sleep(50000);
-		
-		stop = true;
 		
 		String exit = "false";
 		Scanner input2 = new Scanner(System.in);
 		while (true) {
 			exit =  input2.nextLine();
-			if (exit != "false") break;
+			if (exit != "false") stop = true; break;
 		}
 
 		input.close();
 		input2.close();
+		
+		Thread.sleep(Board.board.SIZE()*100);
 	
 		System.out.println();
 		System.out.println("who is alive? ");

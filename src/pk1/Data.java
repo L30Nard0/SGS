@@ -11,7 +11,7 @@ public class Data {
 	public static void SaveData() {
 		
 		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".txt");
-		String pathXY = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat("_xy.txt");
+		String pathXY = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat("_xy.csv");
 
 
 		try {
