@@ -16,7 +16,7 @@ public class Game {
 		int StartNum = input.nextInt();
 		
 		for (int i=0; i<StartNum; i++ ) {
-			Cell x = new Cell("0000-0");
+			Cell x = Board.newCell("0000-0");
 			Board.board.insert(x);
 			System.out.print(x.name + " \"I'm alive\" \n");			
 			x.start();

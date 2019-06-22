@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 
-public class Cell  extends Thread {
+public abstract class Cell  extends Thread {
 	
 	protected String name;
 	protected boolean status = true;
@@ -143,7 +143,7 @@ public class Cell  extends Thread {
 	
 	public  void reproduction() {
 		if (this.isReady()) { 
-			Cell son = new Cell(name);   //reproductionOf(this) return Cell 1,2,3 or 4
+			Cell son = Board.reproductionOf(this);
 			connections.put(son.getName(), 5);
 			son.connections.put(this.getName(), 5);
 			Board.board.insert(son);
