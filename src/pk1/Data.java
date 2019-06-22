@@ -33,6 +33,7 @@ public class Data {
 		}
 		else {System.out.println("The file " + filename + " in " + path + " can not be created");}
 		
+		// writing the cells coordinates in a csv file
 		FileWriter fwXY = new FileWriter(fileXY);
 		BufferedWriter bwXY = new BufferedWriter(fwXY);
 		for (Float x : Board.Xaxis) {
@@ -49,6 +50,7 @@ public class Data {
 		}
 		bwXY.flush();
 		bwXY.close();
+		//
 		
 		} catch (IOException e) {
 		e.printStackTrace();

@@ -1,18 +1,16 @@
 package pk1;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 
 public class Cell  extends Thread {
 	
 	protected String name;
-	//protected String Family; 		// dynamic field increase from parent to child
-	protected boolean status;
-	
+	protected boolean status = true;
 	private int wellness = 1;
-	public Tupla<Integer, int[]> Personality; // personality
-	private static int MaxWLevel = 200;   //  level of wellness that a cell must reach to be ready to reproduction
 	
+	public Tupla<Integer, int[]> Personality; // personality
 	public Tupla<Float, Float> Position; 	// coordinates (x,y) that represent the position of a cell in space
 	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
 	// map of connections between this Cell and the others
@@ -28,37 +26,16 @@ public class Cell  extends Thread {
 		status = true;
 		
 		int[] personality = new int[5];
-		for (int i = 0; i < personality.length; i++) 
-			personality[i] = new Random().nextInt(2);
+		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
 		
-		Personality = new Tupla<Integer, int[]>(new Random().nextInt(4) + 1, personality );
+		Personality = new Tupla<Integer, int[]> (new Random().nextInt(4) + 1, personality );
 		
 		Position = Coordinates.getPosition();
 	}
-	
-	public static Tupla<Float, Float> Position() {
-		
-		int signX = -1;
-		if (new Random().nextInt(2) == 1) signX = 1;
-		int signY = -1;
-		if (new Random().nextInt(2) == 1) signY = 1;
-		
-		float xValue = new Random().nextFloat() + new Random().nextInt(20);
-		while (Board.Xaxis.contains(xValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
-		float yValue = new Random().nextFloat() + new Random().nextInt(20);
-		while (Board.Xaxis.contains(yValue)) xValue = new Random().nextFloat() + new Random().nextInt(20);
-		
-		float x = xValue*signX;
-
-		float y = yValue*signY;
-		
-		return new Tupla<Float, Float>(x, y);
-}
 	//
 	
 	//		RUN		//
-	
-	
+
 	public void run() {
 		try {
 			
@@ -67,7 +44,7 @@ public class Cell  extends Thread {
 			for (int i = 0; i < Board.age; i++) {
 				if (Game.stop) Thread.currentThread().interrupt();
 				if (isInterrupted()) throw new InterruptedException();
-                sleep(30);
+                sleep(50);
                 temp = Board.board.list;
                
        
@@ -78,6 +55,8 @@ public class Cell  extends Thread {
                 		it.remove();
                 	}
                 }
+                
+                // try to edit using get
                 
                 int M = temp.indexOf(this) + 30;
                 if (M > temp.size()) M = temp.size();
@@ -91,6 +70,7 @@ public class Cell  extends Thread {
                 for (int j = temp.indexOf(this); j>m; j--) {
                 	this.addCells(temp.get(j));
                 }
+                //
                 
              	synchronized(Board.board.list) {
              		sleep(100);
@@ -114,7 +94,6 @@ public class Cell  extends Thread {
         	Board.graveyard++;
         }
     }
-	
 	//			
 	
 	// Cell State
@@ -122,7 +101,6 @@ public class Cell  extends Thread {
 	public boolean hasConnection(String name) {
 		return connections.keySet().contains(name);
 	}
-	
 	
 	public int isCompatible(Cell cell) {
 		int CompLevel = 0;
@@ -139,7 +117,7 @@ public class Cell  extends Thread {
 	}
 	
 	public boolean isReady() {
-		if (wellness >= MaxWLevel) return true;
+		if (wellness >= Board.MaxWLevel) return true;
 		return false;
 	}
 	//	
@@ -154,8 +132,6 @@ public class Cell  extends Thread {
 	}
 	
 	public void editW() {
-		// personal method
-		
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }
@@ -167,12 +143,12 @@ public class Cell  extends Thread {
 	
 	public  void reproduction() {
 		if (this.isReady()) { 
-			Cell son = new Cell(name);
+			Cell son = new Cell(name);   //reproductionOf(this) return Cell 1,2,3 or 4
 			connections.put(son.getName(), 5);
 			son.connections.put(this.getName(), 5);
 			Board.board.insert(son);
 			Board.births++;
-			MaxWLevel++;
+			Board.MaxWLevel++;
 			System.out.println("A new life is born!!! Its name is: " + son.name);
 			if (!Game.stop) son.start();
 		}
