@@ -14,4 +14,22 @@ public class Hermit extends Cell {
 		Personality = new Tupla<Integer, int[]> (4, personality );
 	}
 
+	@Override
+	public int joy(int age) {
+		int x = 10 - age/2;
+		return x;
+	}
+
+	@Override
+	public void behavior() {
+		
+	}
+
+	@Override
+	public void status() {
+		wellness += 10;
+		// TODO Auto-generated method stub
+		
+	}
+
 }

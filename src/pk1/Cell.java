@@ -1,36 +1,26 @@
 package pk1;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 
 public abstract class Cell  extends Thread {
 	
-	protected String name;
-	protected boolean status = true;
-	private int wellness = 1;
+	protected String name;    // cannot override the final method from Thread
+	protected boolean status;
+	protected int wellness;
+	private int age;
 	
-	public Tupla<Integer, int[]> Personality; // personality
-	public Tupla<Float, Float> Position; 	// coordinates (x,y) that represent the position of a cell in space
+	public Tupla<Float, Float> Position;     
+	public Tupla<Integer, int[]> Personality; 	
 	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
-	// map of connections between this Cell and the others
 	 
-	
-	
-	// Constructor of a generic Cell 
 	
 	public Cell(String FamilyName) {
 		 
 		name = "Cell".concat(getName().substring(6)).concat(FamilyName.substring(4));
-		
 		status = true;
-		
-		int[] personality = new int[5];
-		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
-		
-		Personality = new Tupla<Integer, int[]> (new Random().nextInt(4) + 1, personality );
-		
-		Position = Coordinates.getPosition();
+		wellness = 1;
+		Position = Tupla.setRandom();
 	}
 	//
 	
@@ -39,15 +29,13 @@ public abstract class Cell  extends Thread {
 	public void run() {
 		try {
 			
-			ArrayList<Cell> temp;
-			// the "for" loop goes on until reach the maximum age value then the cell/thread will be interrupt
-			for (int i = 0; i < Board.age; i++) {
+			CellSet<Cell> temp;
+			for (int i = 0; i < Board.life; i++) {
 				if (Game.stop) Thread.currentThread().interrupt();
-				if (isInterrupted()) throw new InterruptedException();
-                sleep(50);
-                temp = Board.board.list;
+				if (isInterrupted()) { death(); throw new InterruptedException();}
+                sleep(70); age++;
+                temp = Board.board;
                
-       
                 Iterator<String> it = connections.keySet().iterator();
                 while (it.hasNext()) {
                 	String key = it.next();
@@ -56,55 +44,66 @@ public abstract class Cell  extends Thread {
                 	}
                 }
                 
-                // try to edit using get
-                
-                int M = temp.indexOf(this) + 30;
-                if (M > temp.size()) M = temp.size();
-                int m  = temp.indexOf(this) - 30;
-                if (m < 0) m = 0;
-                
-                for (int j = temp.indexOf(this); j<M; j++ ) {
-                	this.addCells(temp.get(j));
-                }
-                
-                for (int j = temp.indexOf(this); j>m; j--) {
-                	this.addCells(temp.get(j));
-                }
-                //
+                find(temp);
                 
              	synchronized(Board.board.list) {
              		sleep(100);
            		  	this.editW();
            		  	if (isReady()) this.reproduction();
               	}
-             	
+        
              	if(Game.stop) this.interrupt();
            	}
-			
 			sleep(20);
-            int index = Board.board.list.indexOf(this);
-            Board.board.list.remove(index);
+            death();
             this.interrupt();
-            System.out.print("\n" + this.name + ": \"I'm dead ");
             name = null;
             if (isInterrupted()) throw new InterruptedException();
             
         } catch (InterruptedException e) {
-        	System.out.println("soo long and thanks for all the fish\""  + "\n");
-        	Board.graveyard++;
+        	if (Game.stop) System.out.println("soo long and thanks for all the fish\""  + "\n");
         }
     }
 	//			
 	
-	// Cell State
 	
 	public boolean hasConnection(String name) {
 		return connections.keySet().contains(name);
 	}
 	
+	
+	public boolean isReady() {
+		if (wellness >= Board.MaxWLevel) return true;
+		return false;
+	}
+	
+	
+	public void death() throws InterruptedException {
+		int index = Board.board.indexOf(this);
+        Board.board.remove(index);
+        Board.graveyard++;
+        status = false;
+	}
+	
+	
+	public void find(CellSet<Cell> board) throws InterruptedException {
+        int M = board.indexOf(this) + this.joy(age);
+        if (M > board.SIZE()) M = board.SIZE();
+        int m  = board.indexOf(this) - this.joy(M);
+        if (m < 0) m = 0;
+        
+        for (int j = board.indexOf(this); j<M; j++ ) {
+        	this.tryToBond(board.get(j));
+        }
+        
+        for (int j = board.indexOf(this); j>m; j--) {
+        	this.tryToBond(board.get(j));
+        }
+	}
+	
+	
 	public int isCompatible(Cell cell) {
 		int CompLevel = 0;
-		
 		int percent = (int)((double)(this.Personality.getValue1()*100/cell.Personality.getValue1()));
 		if (percent > 100) percent = percent/10;
 		
@@ -116,42 +115,44 @@ public abstract class Cell  extends Thread {
 		return CompLevel;
 	}
 	
-	public boolean isReady() {
-		if (wellness >= Board.MaxWLevel) return true;
-		return false;
-	}
-	//	
 	
-	
-	// Cell Action 
-	
-	public void addCells(Cell cell) {
+	public void tryToBond(Cell cell) {
 		if (!connections.keySet().contains(cell.getName()))   
 			if (this.isCompatible(cell) != 0)
-				connections.put(cell.getName(), this.isCompatible(cell));
+				connections.put(cell.name, this.isCompatible(cell));
 	}
 	
 	public void editW() {
+		behavior();
+		status();
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }
-	    
-	    if (connections.entrySet().size() > 10) wellness++;
-	    else wellness--;
-	    if (connections.entrySet().size() > 20) wellness -= 20;
+
 	}
 	
-	public  void reproduction() {
+	
+	public  void reproduction() throws InterruptedException {
 		if (this.isReady()) { 
 			Cell son = Board.reproductionOf(this);
-			connections.put(son.getName(), 5);
-			son.connections.put(this.getName(), 5);
+			connections.put(son.name, 5);
+			son.connections.put(this.name, 5);
 			Board.board.insert(son);
 			Board.births++;
-			Board.MaxWLevel++;
-			System.out.println("A new life is born!!! Its name is: " + son.name);
+			Board.MaxWLevel += Board.board.SIZE()/10;
+			if (Board.births % 10 == 0) Board.MaxWLevel -= 10;
+			Game.currentStatus = true;
+			sleep(20);
 			if (!Game.stop) son.start();
 		}
 	}
+	
+	// abstract methods
+	
+	public abstract int joy(int age);
+	
+	public abstract void behavior();
+	
+	public abstract void status();
 
 }

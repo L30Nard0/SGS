@@ -2,10 +2,13 @@
 
 There are 16 types of personality divided in 4 categories:
 
-1. Diplomat;
-2. Conqueror;
-3. Ascetic;
-4. Social;
+1. Conqueror;
+2. Social;
+3. Diplomat;
+4. Hermit;
 
 Each type has the goal to make its kind survive trough the ages. To do that every single character could choose between different 
 strategy like engage a fight with the other characters or try to collaborate. 
+
+pk1 contain game an players
+pk2 contain support classes
