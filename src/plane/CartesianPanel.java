@@ -29,28 +29,27 @@ public class CartesianPanel extends JPanel {
 	//arrows of axis are represented with "hypotenuse" of 
 	//triangle
 	// now we are define length of cathodes of that triangle
-	public static final int FIRST_LENGHT = 10;
-	public static final int SECOND_LENGHT = 5;
+	public static final int FIRST_LENGHT = 6;
+	public static final int SECOND_LENGHT = 6;
 
 	// size of start coordinate length
-	public static final int ORIGIN_COORDINATE_LENGHT = 6;
+	public static final int ORIGIN_COORDINATE_LENGHT = 1;
 
 	// distance of coordinate strings from axis
-	public static final int AXIS_STRING_DISTANCE = 20;
+	public static final int AXIS_STRING_DISTANCE = 30;
 	
-	public void drawPoint(Tupla<Float, Float> point) {
-	    Board.Axis.add(point);
+	public void drawPoint(Tupla<Integer, Integer> p) {
 	    repaint();
 	}
 
-	private void drawPointOnPanel(Tupla<Float, Float> point, Graphics g) {
+	private void drawPointOnPanel(Tupla<Integer, Integer> p, Graphics g) {
 		int xCoordNumbers = 10;
 		int yCoordNumbers = 10;
 		int xLength = (X_AXIS_SECOND_X_COORD - X_AXIS_FIRST_X_COORD)/ xCoordNumbers;
 		int yLength = (Y_AXIS_SECOND_Y_COORD - Y_AXIS_FIRST_Y_COORD)/ yCoordNumbers;
 	    final int pointDiameter = 5;
-	    final int x = (int) (X_AXIS_FIRST_X_COORD + (point.getValue1() * xLength) - pointDiameter / 2);
-	    final int y = (int) (Y_AXIS_SECOND_Y_COORD - (point.getValue2() * yLength) - pointDiameter / 2);
+	    final int x = (int) (X_AXIS_FIRST_X_COORD + (p.getValue1() * xLength) - pointDiameter / 2);
+	    final int y = (int) (Y_AXIS_SECOND_Y_COORD - (p.getValue2() * yLength) - pointDiameter / 2);
 	    g.fillOval(x, y, pointDiameter, pointDiameter);
 	}
 
@@ -105,6 +104,7 @@ public class CartesianPanel extends JPanel {
 					Y_AXIS_SECOND_Y_COORD - (i * yLength));
 		}
 		
-		Board.Axis.forEach(p -> drawPointOnPanel(p, g));
+		Board.histo.forEach(p -> drawPointOnPanel(p, g));
+		//Board.board.list.forEach(p -> drawPointOnPanel(p.Position, g));
 	}
 }

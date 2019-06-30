@@ -4,7 +4,7 @@ import java.util.*;
 public class CellSet<E> {
 	
     //protected HashMap<String, E> map = new HashMap<String, E>() ;
-    protected ArrayList <E> list = new ArrayList<E>();
+    public ArrayList <E> list = new ArrayList<E>();
     
     public synchronized boolean isEmpty () {
         return list.isEmpty();

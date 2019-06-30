@@ -1,22 +1,30 @@
 package pk1;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner; 
 
 public class Data {
 	public static String filename = "prova";
 	
+	public static void setPath() {
+		System.out.println("*************************************");
+		System.out.println("S.G.S. data will be saved on a file");
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		System.out.print("Please insert file name: ");
+		Data.filename = input.nextLine();
+	}
+	
 	public static void SaveData() {
 		
 		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".csv");
-		//String pathXY = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat("_xy.csv");
-
 
 		try {
 		File file = new File(path);
-		//File fileXY = new File(pathXY);
 		
 		if (file.exists())
 		System.out.println("The file " + filename + " in " + path + " already exist");
@@ -33,28 +41,35 @@ public class Data {
 		}
 		else {System.out.println("The file " + filename + " in " + path + " can not be created");}
 		
-		/* writing the cells coordinates in a csv file
-		FileWriter fwXY = new FileWriter(fileXY);
-		BufferedWriter bwXY = new BufferedWriter(fwXY);
-		for (Float x : Board.Xaxis) {
-			bwXY.write(" ");
-			bwXY.write(x.toString().concat(","));
-		}
-		bwXY.write(";");
-		bwXY.write("\r\n");
-		bwXY.flush();
-
-		for (Float y : Board.Yaxis) {
-			bwXY.write(" ");
-			bwXY.write(y.toString().concat(","));
-		}
-		bwXY.flush();
-		bwXY.close();
-		*/
 		
 		} catch (IOException e) {
 		e.printStackTrace();
 		}
+	}
+	
+	public static void saveHisto() {
+		int a = 0;
+		int b = 0;
+		int c = 0;
+		int d = 0;
+		for (Cell cell : Board.board.list) {
+			switch(cell.Personality.getValue1()) {
+			
+			case 1: Tupla<Integer, Integer> t1 = new Tupla<Integer, Integer>(cell.Personality.getValue1(), ++a);
+					Board.histo.add(t1);
+					
+			case 2: Tupla<Integer, Integer> t2 = new Tupla<Integer, Integer>(cell.Personality.getValue1(), ++b);
+					Board.histo.add(t2);
+					
+			case 3: Tupla<Integer, Integer> t3 = new Tupla<Integer, Integer>(cell.Personality.getValue1(), ++c);
+					Board.histo.add(t3);
+					
+			case 4: Tupla<Integer, Integer> t4 = new Tupla<Integer, Integer>(cell.Personality.getValue1(), ++d);
+					Board.histo.add(t4);
+					
+			}
+		}
+		
 	}
 
 }

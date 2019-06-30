@@ -6,21 +6,22 @@ import java.util.*;
 public abstract class Cell  extends Thread {
 	
 	protected String name;    // cannot override the final method from Thread
-	protected boolean status;
+	protected boolean Status;
 	protected int wellness;
-	private int age;
+	protected int age;
+	protected int range;
 	
 	public Tupla<Float, Float> Position;     
 	public Tupla<Integer, int[]> Personality; 	
 	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
 	 
 	
-	public Cell(String FamilyName) {
+	public Cell() {
 		 
-		name = "Cell".concat(getName().substring(6)).concat(FamilyName.substring(4));
-		status = true;
+		name = "Cell".concat(getName().substring(6));
+		Status = true;
 		wellness = 1;
-		Position = Tupla.setRandom();
+		Position = God.setRandCoordinates();
 	}
 	//
 	
@@ -30,41 +31,28 @@ public abstract class Cell  extends Thread {
 		try {
 			
 			CellSet<Cell> temp;
+            temp = Board.board;
+            find(temp);
+            
 			for (int i = 0; i < Board.life; i++) {
-				if (Game.stop) Thread.currentThread().interrupt();
-				if (isInterrupted()) { death(); throw new InterruptedException();}
-                sleep(70); age++;
-                temp = Board.board;
-               
-                Iterator<String> it = connections.keySet().iterator();
-                while (it.hasNext()) {
-                	String key = it.next();
-                	if (connections.get(key) == null) {
-                		it.remove();
-                	}
-                }
+				if (Game.stop) this.interrupt();
+				if (isInterrupted())  throw new InterruptedException();
+				
+                sleep(70); 
+
+                forget();
                 
-                find(temp);
-                
-             	synchronized(Board.board.list) {
-             		sleep(100);
-           		  	this.editW();
-           		  	if (isReady()) this.reproduction();
-              	}
-        
-             	if(Game.stop) this.interrupt();
+                editStatus();
+
            	}
 			sleep(20);
             death();
-            this.interrupt();
-            name = null;
             if (isInterrupted()) throw new InterruptedException();
             
         } catch (InterruptedException e) {
-        	if (Game.stop) System.out.println("soo long and thanks for all the fish\""  + "\n");
+        	if (Game.stop) System.out.print("#");
         }
-    }
-	//			
+    }		
 	
 	
 	public boolean hasConnection(String name) {
@@ -73,23 +61,37 @@ public abstract class Cell  extends Thread {
 	
 	
 	public boolean isReady() {
-		if (wellness >= Board.MaxWLevel) return true;
-		return false;
+		boolean ready = false;
+		if (wellness >= Board.MaxWLevel) ready = true;
+		return ready;
 	}
 	
 	
 	public void death() throws InterruptedException {
+        this.interrupt();
+        name = null;
 		int index = Board.board.indexOf(this);
         Board.board.remove(index);
         Board.graveyard++;
-        status = false;
+        Status = false;
+	}
+	
+	
+	public void forget() {
+        Iterator<String> it = connections.keySet().iterator();
+        while (it.hasNext()) {
+        	String key = it.next();
+        	if (connections.get(key) == null) {
+        		it.remove();
+        	}
+        }
 	}
 	
 	
 	public void find(CellSet<Cell> board) throws InterruptedException {
-        int M = board.indexOf(this) + this.joy(age);
+        int M = board.indexOf(this) + range;
         if (M > board.SIZE()) M = board.SIZE();
-        int m  = board.indexOf(this) - this.joy(M);
+        int m  = board.indexOf(this) - range;
         if (m < 0) m = 0;
         
         for (int j = board.indexOf(this); j<M; j++ ) {
@@ -122,9 +124,15 @@ public abstract class Cell  extends Thread {
 				connections.put(cell.name, this.isCompatible(cell));
 	}
 	
-	public void editW() {
-		behavior();
-		status();
+	public  void editStatus() throws InterruptedException {
+		age ++;
+     	synchronized(Board.board.list) {
+     		sleep(100);
+    		behavior();
+    		status();
+   		  	if (isReady()) this.reproduction();
+      	}
+     	
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }
@@ -134,22 +142,20 @@ public abstract class Cell  extends Thread {
 	
 	public  void reproduction() throws InterruptedException {
 		if (this.isReady()) { 
-			Cell son = Board.reproductionOf(this);
+			Cell son = God.reproductionOf(this);
 			connections.put(son.name, 5);
 			son.connections.put(this.name, 5);
 			Board.board.insert(son);
 			Board.births++;
-			Board.MaxWLevel += Board.board.SIZE()/10;
+			Board.MaxWLevel += Board.board.SIZE()/15;
 			if (Board.births % 10 == 0) Board.MaxWLevel -= 10;
-			Game.currentStatus = true;
+			Game.wait = false;
 			sleep(20);
 			if (!Game.stop) son.start();
 		}
 	}
 	
 	// abstract methods
-	
-	public abstract int joy(int age);
 	
 	public abstract void behavior();
 	
