@@ -2,27 +2,39 @@ package pk1;
 
 import java.util.*;
 
+import com.vdurmont.emoji.EmojiParser;
+
 
 public abstract class Cell  extends Thread {
 	
 	protected String name;    // cannot override the final method from Thread
-	protected boolean Status;
+	protected boolean state;
 	protected int wellness;
-	protected int age;
 	protected int range;
 	
-	public Tupla<Float, Float> Position;     
-	public Tupla<Integer, int[]> Personality; 	
-	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
+	
+	protected Tupla<Integer, int[]> Personality; 	
+	protected HashMap<Cell, Integer> connections = new HashMap<Cell, Integer>();
+	private static final String deadCellEmoji = ":white_large_square:";
+    private static final String aliveCellEmoji = ":black_large_square:";
 	 
 	
 	public Cell() {
 		 
 		name = "Cell".concat(getName().substring(6));
-		Status = true;
+		state = true;
 		wellness = 1;
-		Position = God.setRandCoordinates();
+		
 	}
+	
+    public String getStateEmoji() {
+
+        String emojiStr = state ? aliveCellEmoji : deadCellEmoji;
+        return EmojiParser.parseToUnicode(emojiStr);
+
+    }
+    
+	
 	//
 	
 	//		RUN		//
@@ -30,15 +42,15 @@ public abstract class Cell  extends Thread {
 	public void run() {
 		try {
 			
-			CellSet<Cell> temp;
-            temp = Board.board;
-            find(temp);
-            
 			for (int i = 0; i < Board.life; i++) {
 				if (Game.stop) this.interrupt();
 				if (isInterrupted())  throw new InterruptedException();
 				
-                sleep(70); 
+                sleep(100);
+				
+    			CellSet<Cell> temp;
+                temp = Board.board;
+				find(temp); 
 
                 forget();
                 
@@ -55,11 +67,6 @@ public abstract class Cell  extends Thread {
     }		
 	
 	
-	public boolean hasConnection(String name) {
-		return connections.keySet().contains(name);
-	}
-	
-	
 	public boolean isReady() {
 		boolean ready = false;
 		if (wellness >= Board.MaxWLevel) ready = true;
@@ -73,15 +80,15 @@ public abstract class Cell  extends Thread {
 		int index = Board.board.indexOf(this);
         Board.board.remove(index);
         Board.graveyard++;
-        Status = false;
+        state = false;
 	}
 	
 	
 	public void forget() {
-        Iterator<String> it = connections.keySet().iterator();
+        Iterator<Cell> it = connections.keySet().iterator();
         while (it.hasNext()) {
-        	String key = it.next();
-        	if (connections.get(key) == null) {
+        	Cell key = it.next();
+        	if ( key.name == null) { 
         		it.remove();
         	}
         }
@@ -89,9 +96,9 @@ public abstract class Cell  extends Thread {
 	
 	
 	public void find(CellSet<Cell> board) throws InterruptedException {
-        int M = board.indexOf(this) + range;
-        if (M > board.SIZE()) M = board.SIZE();
-        int m  = board.indexOf(this) - range;
+        int M = board.list.indexOf(this) + range;
+        if (M > board.list.size()) M = board.SIZE() - 1;
+        int m  = board.list.indexOf(this) - range;
         if (m < 0) m = 0;
         
         for (int j = board.indexOf(this); j<M; j++ ) {
@@ -119,13 +126,13 @@ public abstract class Cell  extends Thread {
 	
 	
 	public void tryToBond(Cell cell) {
-		if (!connections.keySet().contains(cell.getName()))   
+		if (!connections.keySet().contains(cell))   
 			if (this.isCompatible(cell) != 0)
-				connections.put(cell.name, this.isCompatible(cell));
+				connections.put(cell, this.isCompatible(cell) + RandFactor());
 	}
 	
+	
 	public  void editStatus() throws InterruptedException {
-		age ++;
      	synchronized(Board.board.list) {
      		sleep(100);
     		behavior();
@@ -143,8 +150,8 @@ public abstract class Cell  extends Thread {
 	public  void reproduction() throws InterruptedException {
 		if (this.isReady()) { 
 			Cell son = God.reproductionOf(this);
-			connections.put(son.name, 5);
-			son.connections.put(this.name, 5);
+			connections.put(son, 5);
+			son.connections.put(this, 5);
 			Board.board.insert(son);
 			Board.births++;
 			Board.MaxWLevel += Board.board.SIZE()/15;
@@ -157,8 +164,12 @@ public abstract class Cell  extends Thread {
 	
 	// abstract methods
 	
-	public abstract void behavior();
+	public abstract String getType(); //
 	
-	public abstract void status();
+	public abstract int RandFactor(); //
+	
+	public abstract void behavior() throws InterruptedException;
+	
+	public abstract void status() throws InterruptedException;
 
 }

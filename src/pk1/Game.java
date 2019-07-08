@@ -1,13 +1,14 @@
 package pk1;
 
+
 import java.util.Scanner;
-//import java.util.stream.IntStream;
 
 
 public class Game {
 	
 	public static boolean stop = false;
 	public static boolean wait = true;
+
 	
 	static Thread Killer = new Thread() {
 		public void run() {
@@ -15,7 +16,11 @@ public class Game {
 			if (Board.board.SIZE() != 0) {
 				String exit = "false";
 				exit =  input2.nextLine();
-				if (exit != "false") { wait = false; stop = true; } 
+				if (exit != "false") {
+					Data.saveHisto();
+					wait = false;
+					stop = true; 
+				} 
 			}
 			input2.close();
 		}
@@ -23,16 +28,18 @@ public class Game {
 
     
     public static String Info() {
-        return
-                "Alive: " + Board.board.SIZE() + "\n" +
-                "Births: " + Board.births + "\n" +
-                "Deaths: " + Board.graveyard + "\n";
+        return  "		ARENA \n\n" + new Game().printCell() + "\n\n"+
+        		"Space: " + (Board.arena.size() - Board.board.SIZE()) + "			Conquerors: " +  Board.Conqueror + "\n" +
+                "Alive: " + Board.board.SIZE() +  "			Socials: " +  Board.Social + "\n" + 
+                "Births: " + Board.births + "			Diplomats: " +  Board.Diplomat + "\n" + 
+                "Deaths: " + Board.graveyard + "			Hermits: " +  Board.Hermit + "\n";
     }
+
     
     
-    public static String clearConsole(){
+    public static String clearConsole(int n){
         StringBuilder backSpace = new StringBuilder();
-        for (int i=0; i<Board.StartNumber+25; i++){
+        for (int i=0; i<n; i++){
         	backSpace.append("\n"); 
         }
         return backSpace.toString();
@@ -43,7 +50,7 @@ public class Game {
     	Thread.currentThread();
     	System.out.println();
 		while(wait) {
-			Thread.sleep(1000);
+			Thread.sleep(700);
 			System.out.print(". ");
 			if (Board.board.SIZE() == 0) break;
 		}
@@ -51,25 +58,30 @@ public class Game {
     }
     
     
-    public void printCell() {
-    	System.out.println(clearConsole());
-    	//IntStream.range(0, Board.board.SIZE()).forEach(val -> (val%10 == 0) ? System.out.print("#") : System.out.println("\n#"));
-    	for (int i = 1; i < Board.board.SIZE()+1; i++) {
-    		System.out.print("|*|");
-			if (i%10 == 0 ) System.out.println();
-		}
-    	System.out.println();
-    	System.out.println("\n" +Info());
+    public String printCell() {
+    	
+        StringBuilder boardString = new StringBuilder();
+        for (int i=0; i<Board.arena.hight(); i++){
+            for (int j=0; j<Board.arena.length(); j++){
+                boardString.append(Board.arena.get(i, j).getStateEmoji());
+            }
+            boardString.append("\n");
+        }
+        return boardString.toString();
+        
     }
-    
+  
     
     public static void startGame() throws InterruptedException {
+    	
 		Game.Wait();
         while (true) {
         	if (Game.stop) break;
             Thread.sleep(1000);
             System.out.flush();
-            if (!Game.stop) new Game().printCell();
+            if (!Game.stop) {
+            	System.out.print(clearConsole(40) + Info());
+            }
         }
     }
     

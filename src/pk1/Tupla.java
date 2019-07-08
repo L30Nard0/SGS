@@ -15,8 +15,16 @@ public class Tupla <T, E> {
 		return x;
 	}
 	
+	public void setValue1(T x) {
+		this.x = x;
+	}
+	
 	public E getValue2() {
 		return y;
+	}
+	
+	public void setValue2(E y) {
+		this.y = y;
 	}
 	
 	public void printT() {

@@ -1,28 +1,20 @@
 package pk1;
 
 import java.util.Random;
+
 import java.util.stream.IntStream;
 
+
+
 public class God {
-	private static final int X = 8;
-	private static final int Y = 8;
-	
 	
 	public static void Creation(int n) {
 		for (int i=0; i<n; i++ ) {
 			Cell x = God.newCell();
-			Board.board.insert(x);
-			System.out.print(x.name + " \"I'm alive\" " + x.Personality.getValue1() +"\n");			
 			x.start();
+			Board.board.insert(x);
 		}
-	}
-	
-	
-	public static Tupla<Float, Float> setRandCoordinates() {
-		float xValue = new Random().nextFloat() + new Random().nextInt(X);
-		float yValue = new Random().nextFloat() + new Random().nextInt(Y);
-		return new Tupla<Float, Float> (xValue, yValue);
-		
+		System.out.print(Game.clearConsole(4)+ Game.Info());
 	}
 	
 	
@@ -37,13 +29,21 @@ public class God {
 	public static Cell newCell() {
 		switch(new Random().nextInt(4) + 1) {
 		
-			case 1: return new Conqueror();
+			case 1:
+				Board.Conqueror++;
+				return new Conqueror();
 		
-			case 2: return new Social();
+			case 2:
+				Board.Social++;
+				return new Social();
 		
-			case 3: return new Diplomat();
+			case 3:
+				Board.Diplomat++;
+				return new Diplomat();
 			
-			case 4: return new Hermit();
+			case 4:
+				Board.Hermit++;
+				return new Hermit();
 		}
 		return null;
 	}
@@ -52,13 +52,21 @@ public class God {
 	public static Cell reproductionOf(Cell cell) {
 		switch(cell.Personality.getValue1()) {
 		
-			case 1: return new Conqueror();
-					
-			case 2: return new Social();
-			
-			case 3: return new Diplomat();
-				
-			case 4: return new Hermit();
+			case 1:
+				Board.Conqueror++;
+				return new Conqueror();
+	
+			case 2:
+				Board.Social++;
+				return new Social();
+	
+			case 3:
+				Board.Diplomat++;
+				return new Diplomat();
+		
+			case 4:
+				Board.Hermit++;
+				return new Hermit();
 		}
 		return null;
 	}

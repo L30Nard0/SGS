@@ -11,12 +11,14 @@ public class Data {
 	public static String filename = "prova";
 	
 	public static void setPath() {
-		System.out.println("*************************************");
-		System.out.println("S.G.S. data will be saved on a file");
+		System.out.println("****************************************************************************************\n");
+		System.out.println(" Welcome to this Social Game System simulation \n");
+		System.out.println(" Data of your execution will be saved in a file in \"C:\\\\Users\\\\Leo\\\\Desktop\\\\SGS_data/\" \n");
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		System.out.print("Please insert file name: ");
+		System.out.print(" Please insert file name: ");
 		Data.filename = input.nextLine();
+		System.out.println("\n\n****************************************************************************************");
 	}
 	
 	public static void SaveData() {
@@ -27,9 +29,9 @@ public class Data {
 		File file = new File(path);
 		
 		if (file.exists())
-		System.out.println("The file " + filename + " in " + path + " already exist");
+		System.out.println("\nThe file " + filename + " in " + path + " already exist");
 		else if (file.createNewFile()) {
-			System.out.println("The file " + filename + " in " + path + " has been created");
+			System.out.println("\nThe file " + filename + " in " + path + " has been created");
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			for (Cell cell : Board.board.list) {
@@ -39,7 +41,7 @@ public class Data {
 			bw.flush();
 			bw.close();
 		}
-		else {System.out.println("The file " + filename + " in " + path + " can not be created");}
+		else {System.out.println("\nThe file " + filename + " in " + path + " can not be created");}
 		
 		
 		} catch (IOException e) {

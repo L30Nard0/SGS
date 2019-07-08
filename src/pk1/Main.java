@@ -13,8 +13,9 @@ public class Main {
 		
 		@SuppressWarnings("resource")
 		Scanner input2 = new Scanner(System.in);
-		System.out.print("\nInsert the start number of cells: ");
+		System.err.print("\n Insert the start number of cells: ");
 		int StartNum = input2.nextInt();
+		System.out.println();
 		Board.StartNumber = StartNum;
 		
 		God.Creation(StartNum);
@@ -24,15 +25,14 @@ public class Main {
 		Game.startGame();
 		Thread.sleep(Board.board.SIZE()*110);
 		
-		new Game().printCell();
+		System.out.print(Game.clearConsole(40) + Game.Info());
 		
-		Data.saveHisto();
 		
 		Cartesian.plane();
 		
 		Data.SaveData();
 		
-		System.out.println("The END");
+		System.err.println("\n\n			THE END");
 	}
 
 }

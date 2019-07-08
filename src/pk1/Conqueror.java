@@ -1,23 +1,34 @@
 package pk1;
 
+import java.util.Random;
 
 public class Conqueror  extends Cell {
 	
 	public Conqueror() {
 
 		Personality = new Tupla<Integer, int[]> (1, God.personality());
-		range = 30;
+		range = 20;
 	}
 
 	@Override
-	public void behavior() {
-		if (age > 5) this.interrupt();
-		
+	public void behavior() throws InterruptedException {
+		Cell cell = Board.board.get(new Random().nextInt(Board.board.SIZE()));
+		cell.Personality.setValue1(1);
 	}
 
 	@Override
 	public void status() {
-		wellness-=100;
+		wellness -= 20;
+	}
+
+	@Override
+	public int RandFactor() {
+		return new Random().nextInt(this.Personality.getValue1() + 1);
 		
+	}
+
+	@Override
+	public String getType() {
+		return this.getClass().toString().substring(10);
 	}
 }
