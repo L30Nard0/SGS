@@ -12,7 +12,7 @@ public abstract class Cell  extends Thread {
 	protected int wellness;
 	protected int range;
 	
-	
+	protected Tupla <Integer, Integer> coordinates;
 	protected Tupla<Integer, int[]> Personality; 	
 	protected HashMap<Cell, Integer> connections = new HashMap<Cell, Integer>();
 	private static final String deadCellEmoji = ":white_large_square:";
@@ -24,6 +24,7 @@ public abstract class Cell  extends Thread {
 		name = "Cell".concat(getName().substring(6));
 		state = true;
 		wellness = 1;
+		coordinates = setCoordinates();
 		
 	}
 	
@@ -33,6 +34,13 @@ public abstract class Cell  extends Thread {
         return EmojiParser.parseToUnicode(emojiStr);
 
     }
+    
+    
+	public Tupla<Integer, Integer> setCoordinates(){
+		Tupla<Integer, Integer> t = 
+    			new Tupla<Integer, Integer>(new Random().nextInt(Board.space+1), new Random().nextInt(Board.space+1));
+		return t;
+	}
     
 	
 	//

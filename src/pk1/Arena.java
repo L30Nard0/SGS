@@ -21,7 +21,7 @@ public class Arena {
 		return matrix[i][j];
     }
     
-    public synchronized void add(Cell cell) {
+    public synchronized void addi(Cell cell) {
     	matrix[i][j] = cell;
     	j++;
     	if (j==Board.space+10) {
@@ -60,6 +60,16 @@ public class Arena {
     
     public synchronized int length() {
 		return matrix[1].length;
+    }
+    
+    public synchronized void add(Cell cell) {
+    	if (matrix[cell.coordinates.getValue1()][cell.coordinates.getValue2()].name != null)
+    		matrix[cell.coordinates.getValue1()][cell.coordinates.getValue2()] = cell;
+    	else {
+    		cell.setCoordinates();
+    		add(cell);
+    	}
+    	shuffle(this.matrix);
     }
 
 }

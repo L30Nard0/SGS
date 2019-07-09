@@ -6,6 +6,7 @@ public class Null extends Cell {
 		name = null;
 		state = false;
 		wellness = 0;
+		coordinates = null;
 	}
 	
 	public void run() {
