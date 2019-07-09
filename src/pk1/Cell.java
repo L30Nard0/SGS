@@ -89,6 +89,12 @@ public abstract class Cell  extends Thread {
         Board.board.remove(index);
         Board.graveyard++;
         state = false;
+		switch(this.Personality.getValue1()) {
+		case 1: Board.Conqueror--;
+		case 2: Board.Social--;
+		case 3: Board.Diplomat--;
+		case 4: Board.Hermit--;
+		}
 	}
 	
 	

@@ -12,8 +12,10 @@ public class Conqueror  extends Cell {
 
 	@Override
 	public void behavior() throws InterruptedException {
-		Cell cell = Board.board.get(new Random().nextInt(Board.board.SIZE()));
-		cell.Personality.setValue1(1);
+		if (new Random().nextInt(101)<10) {
+			Cell cell = Board.board.get(new Random().nextInt(Board.board.SIZE()));
+			cell.Personality.setValue1(1);
+		}
 	}
 
 	@Override

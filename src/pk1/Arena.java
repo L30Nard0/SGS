@@ -5,11 +5,12 @@ import java.util.Random;
 public class Arena {
 	
     public Cell[][] matrix;
-    public static int i = 0;
-    public static int j = 0;
+    private int i = 0;
+    private int j = 0;
     
     public Arena() {
         matrix = new Cell[Board.space][Board.space+10];
+        i = j = matrix.length;
         for (int i=0; i<matrix.length; i++){
             for (int j=0; j<matrix[i].length; j++){
                 matrix[i][j] = new Null();
@@ -63,12 +64,17 @@ public class Arena {
     }
     
     public synchronized void add(Cell cell) {
-    	if (matrix[cell.coordinates.getValue1()][cell.coordinates.getValue2()].name != null)
-    		matrix[cell.coordinates.getValue1()][cell.coordinates.getValue2()] = cell;
-    	else {
-    		cell.setCoordinates();
-    		add(cell);
+    	
+    	boolean ctrl = true;
+    	while(ctrl) {
+    		int i = new Random().nextInt(this.i);
+    		int j = new Random().nextInt(this.j);
+    		if (matrix[i][j].name == null) {
+        		matrix[i][j] = cell;
+        		ctrl = false;
+    		}
     	}
+    	
     	shuffle(this.matrix);
     }
 

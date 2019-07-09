@@ -50,7 +50,7 @@ public class Game {
     	Thread.currentThread();
     	System.out.println();
 		while(wait) {
-			Thread.sleep(700);
+			Thread.sleep(500);
 			System.out.print(". ");
 			if (Board.board.SIZE() == 0) break;
 		}
