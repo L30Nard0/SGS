@@ -2,26 +2,47 @@ package pk1;
 
 import java.util.*;
 
+import com.vdurmont.emoji.EmojiParser;
+
 
 public abstract class Cell  extends Thread {
 	
 	protected String name;    // cannot override the final method from Thread
-	protected boolean status;
+	protected boolean state;
 	protected int wellness;
-	private int age;
+	protected int range;
 	
-	public Tupla<Float, Float> Position;     
-	public Tupla<Integer, int[]> Personality; 	
-	public HashMap<String, Integer> connections = new HashMap<String, Integer>(); 
+	protected Tupla <Integer, Integer> coordinates;
+	protected Tupla<Integer, int[]> Personality; 	
+	protected HashMap<Cell, Integer> connections = new HashMap<Cell, Integer>();
+	private static final String deadCellEmoji = ":white_large_square:";
+    private static final String aliveCellEmoji = ":black_large_square:";
 	 
 	
-	public Cell(String FamilyName) {
+	public Cell() {
 		 
-		name = "Cell".concat(getName().substring(6)).concat(FamilyName.substring(4));
-		status = true;
+		name = "Cell".concat(getName().substring(6));
+		state = true;
 		wellness = 1;
-		Position = Tupla.setRandom();
+		coordinates = setCoordinates();
+		
 	}
+	
+    public String getStateEmoji() {
+
+        String emojiStr = state ? aliveCellEmoji : deadCellEmoji;
+        return EmojiParser.parseToUnicode(emojiStr);
+
+    }
+    
+    
+	public Tupla<Integer, Integer> setCoordinates(){
+		Tupla<Integer, Integer> t = 
+    			new Tupla<Integer, Integer>(new Random().nextInt(Board.space+1), new Random().nextInt(Board.space+1));
+		return t;
+	}
+    
+	
 	//
 	
 	//		RUN		//
@@ -29,67 +50,69 @@ public abstract class Cell  extends Thread {
 	public void run() {
 		try {
 			
-			CellSet<Cell> temp;
 			for (int i = 0; i < Board.life; i++) {
-				if (Game.stop) Thread.currentThread().interrupt();
-				if (isInterrupted()) { death(); throw new InterruptedException();}
-                sleep(70); age++;
+				if (Game.stop) this.interrupt();
+				if (isInterrupted())  throw new InterruptedException();
+				
+                sleep(100);
+				
+    			CellSet<Cell> temp;
                 temp = Board.board;
-               
-                Iterator<String> it = connections.keySet().iterator();
-                while (it.hasNext()) {
-                	String key = it.next();
-                	if (connections.get(key) == null) {
-                		it.remove();
-                	}
-                }
+				find(temp); 
+
+                forget();
                 
-                find(temp);
-                
-             	synchronized(Board.board.list) {
-             		sleep(100);
-           		  	this.editW();
-           		  	if (isReady()) this.reproduction();
-              	}
-        
-             	if(Game.stop) this.interrupt();
+                editStatus();
+
            	}
 			sleep(20);
             death();
-            this.interrupt();
-            name = null;
             if (isInterrupted()) throw new InterruptedException();
             
         } catch (InterruptedException e) {
-        	if (Game.stop) System.out.println("soo long and thanks for all the fish\""  + "\n");
+        	if (Game.stop) System.out.print("#");
         }
-    }
-	//			
-	
-	
-	public boolean hasConnection(String name) {
-		return connections.keySet().contains(name);
-	}
+    }		
 	
 	
 	public boolean isReady() {
-		if (wellness >= Board.MaxWLevel) return true;
-		return false;
+		boolean ready = false;
+		if (wellness >= Board.MaxWLevel) ready = true;
+		return ready;
 	}
 	
 	
 	public void death() throws InterruptedException {
+        this.interrupt();
+        name = null;
 		int index = Board.board.indexOf(this);
         Board.board.remove(index);
         Board.graveyard++;
-        status = false;
+        state = false;
+		switch(this.Personality.getValue1()) {
+		case 1: Board.Conqueror--;
+		case 2: Board.Social--;
+		case 3: Board.Diplomat--;
+		case 4: Board.Hermit--;
+		}
+	}
+	
+	
+	public void forget() {
+        Iterator<Cell> it = connections.keySet().iterator();
+        while (it.hasNext()) {
+        	Cell key = it.next();
+        	if ( key.name == null) { 
+        		it.remove();
+        	}
+        }
 	}
 	
 	
 	public void find(CellSet<Cell> board) throws InterruptedException {
-        int M = board.indexOf(this) + this.joy(age);
-        if (M > board.SIZE()) M = board.SIZE();
-        int m  = board.indexOf(this) - this.joy(M);
+        int M = board.list.indexOf(this) + range;
+        if (M > board.list.size()) M = board.SIZE() - 1;
+        int m  = board.list.indexOf(this) - range;
         if (m < 0) m = 0;
         
         for (int j = board.indexOf(this); j<M; j++ ) {
@@ -117,14 +140,20 @@ public abstract class Cell  extends Thread {
 	
 	
 	public void tryToBond(Cell cell) {
-		if (!connections.keySet().contains(cell.getName()))   
+		if (!connections.keySet().contains(cell))   
 			if (this.isCompatible(cell) != 0)
-				connections.put(cell.name, this.isCompatible(cell));
+				connections.put(cell, this.isCompatible(cell) + RandFactor());
 	}
 	
-	public void editW() {
-		behavior();
-		status();
+	
+	public  void editStatus() throws InterruptedException {
+     	synchronized(Board.board.list) {
+     		sleep(100);
+    		behavior();
+    		status();
+   		  	if (isReady()) this.reproduction();
+      	}
+     	
 	    for (Integer TypeOfBond : connections.values()) {
 	    	wellness += TypeOfBond; 
 	    }
@@ -134,14 +163,14 @@ public abstract class Cell  extends Thread {
 	
 	public  void reproduction() throws InterruptedException {
 		if (this.isReady()) { 
-			Cell son = Board.reproductionOf(this);
-			connections.put(son.name, 5);
-			son.connections.put(this.name, 5);
+			Cell son = God.reproductionOf(this);
+			connections.put(son, 5);
+			son.connections.put(this, 5);
 			Board.board.insert(son);
 			Board.births++;
-			Board.MaxWLevel += Board.board.SIZE()/10;
+			Board.MaxWLevel += Board.board.SIZE()/15;
 			if (Board.births % 10 == 0) Board.MaxWLevel -= 10;
-			Game.currentStatus = true;
+			Game.wait = false;
 			sleep(20);
 			if (!Game.stop) son.start();
 		}
@@ -149,10 +178,12 @@ public abstract class Cell  extends Thread {
 	
 	// abstract methods
 	
-	public abstract int joy(int age);
+	public abstract String getType(); //
 	
-	public abstract void behavior();
+	public abstract int RandFactor(); //
 	
-	public abstract void status();
+	public abstract void behavior() throws InterruptedException;
+	
+	public abstract void status() throws InterruptedException;
 
 }

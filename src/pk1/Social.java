@@ -1,35 +1,44 @@
 package pk1;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Social extends Cell {
 	
-	public Social(String FamilyName) {
-		super(FamilyName);
+	int age = 0;
+	
+	public Social() {
 		
-		int[] personality = new int[5];
-		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
-		
-		Personality = new Tupla<Integer, int[]> (2, personality );
+		Personality = new Tupla<Integer, int[]> (2, God.personality());
+		range = 50;
 	}
 
-	@Override
-	public int joy(int age) {
-		int x = 50 - age/10;
-		return x;
-	}
 
 	@Override
 	public void behavior() {
-		// TODO Auto-generated method stub
-		
+		age++;
+		if (connections.size() < 5  && age > 3) {
+			range += 30;
+			int[] arr = {0,0,1,1,0};
+			this.Personality.setValue2(arr);
+		}
 	}
 
 	@Override
 	public void status() {
-		// TODO Auto-generated method stub
-		
+		if (connections.size() < 10 && age > 3) wellness--;
+		else wellness += 20;
+	}
+
+
+	@Override
+	public int RandFactor() {
+		return new Random().nextInt(this.Personality.getValue1() + 1);
+	}
+
+
+	@Override
+	public String getType() {
+		return this.getClass().toString().substring(10);
 	}
 
 }

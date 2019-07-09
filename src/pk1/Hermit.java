@@ -1,35 +1,40 @@
 package pk1;
 
+
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Hermit extends Cell {
 	
-	public Hermit(String FamilyName) {
-		super(FamilyName);
-		
-		int[] personality = new int[5];
-		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
-		
-		Personality = new Tupla<Integer, int[]> (4, personality );
+	public Hermit() {
+
+		Personality = new Tupla<Integer, int[]> (4, God.personality());
+		range = 20;
 	}
+	
 
 	@Override
-	public int joy(int age) {
-		int x = 10 - age/2;
-		return x;
-	}
-
-	@Override
-	public void behavior() {
-		
+	public void behavior() throws InterruptedException {
+		if (connections.size() > 10) {
+			Cell cell = Board.board.get(new Random().nextInt(11));
+			connections.remove(cell);
+		}
 	}
 
 	@Override
 	public void status() {
-		wellness += 10;
-		// TODO Auto-generated method stub
+		if (connections.size() > 10) wellness--;
+		wellness += 30;
+	}
+
+	@Override
+	public int RandFactor() {
+		return new Random().nextInt(this.Personality.getValue1() + 1);
 		
+	}
+
+	@Override
+	public String getType() {
+		return this.getClass().toString().substring(10);
 	}
 
 }

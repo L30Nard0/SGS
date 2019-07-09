@@ -1,34 +1,36 @@
 package pk1;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class Conqueror  extends Cell {
 	
-	public Conqueror(String FamilyName) {
-		super(FamilyName);
-		
-		int[] personality = new int[5];
-		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
-		
-		Personality = new Tupla<Integer, int[]> (1, personality );
+	public Conqueror() {
+
+		Personality = new Tupla<Integer, int[]> (1, God.personality());
+		range = 20;
 	}
 
 	@Override
-	public int joy(int age) {
-		int x = 30 - age/2;
-		return x;
-	}
-
-	@Override
-	public void behavior() {
-		// TODO Auto-generated method stub
-		
+	public void behavior() throws InterruptedException {
+		if (new Random().nextInt(101)<10) {
+			Cell cell = Board.board.get(new Random().nextInt(Board.board.SIZE()));
+			cell.Personality.setValue1(1);
+		}
 	}
 
 	@Override
 	public void status() {
-		// TODO Auto-generated method stub
+		wellness -= 20;
+	}
+
+	@Override
+	public int RandFactor() {
+		return new Random().nextInt(this.Personality.getValue1() + 1);
 		
+	}
+
+	@Override
+	public String getType() {
+		return this.getClass().toString().substring(10);
 	}
 }

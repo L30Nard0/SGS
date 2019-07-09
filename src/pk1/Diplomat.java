@@ -1,35 +1,38 @@
 package pk1;
 
 import java.util.Random;
-import java.util.stream.IntStream;
-
 
 public class Diplomat extends Cell {
 
-	public Diplomat(String FamilyName) {
-		super(FamilyName);
+	int age = 0;
+	
+	public Diplomat() {
 		
-		int[] personality = new int[5];
-		IntStream.range(1,6).forEach(val -> personality[val-1] = new Random().nextInt(2));
-		
-		Personality = new Tupla<Integer, int[]> (3, personality );
-	}
-
-	@Override
-	public int joy(int age) {
-		int x = 30 - age/2;
-		return x;
+		Personality = new Tupla<Integer, int[]> (3, God.personality());
+		range = 30;
 	}
 
 	@Override
 	public void behavior() {
-		// TODO Auto-generated method stub
+		age++;
+	}
+
+	@Override
+	public void status() throws InterruptedException {
+		if (age == Board.life-1)
+			this.reproduction();
+	}
+
+	@Override
+	public int RandFactor() {
+		return new Random().nextInt(this.Personality.getValue1() + 1);
 		
 	}
 
 	@Override
-	public void status() {
-		// TODO Auto-generated method stub
+	public String getType() {
+		return this.getClass().toString().substring(10);
+		
 		
 	}
 	
