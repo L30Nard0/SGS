@@ -16,14 +16,15 @@ public class Data {
 		System.out.println(" Data of your execution will be saved in a file in \"C:\\\\Users\\\\Leo\\\\Desktop\\\\SGS_data/\" \n");
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-		System.out.print(" Please insert file name: ");
+		System.out.print(" Please insert file name and path: ");
 		Data.filename = input.nextLine();
 		System.out.println("\n\n****************************************************************************************");
 	}
 	
 	public static void SaveData() {
 		
-		String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".csv");
+		//String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".csv");
+		String path = filename.concat(".csv");
 
 		try {
 		File file = new File(path);
