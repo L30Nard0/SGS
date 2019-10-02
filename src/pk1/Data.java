@@ -23,7 +23,7 @@ public class Data {
 	
 	public static void SaveData() {
 		
-		//String path = "C:\\Users\\Leo\\Desktop\\SGS_data/".concat(filename).concat(".csv");
+		
 		String path = filename.concat(".csv");
 
 		try {
